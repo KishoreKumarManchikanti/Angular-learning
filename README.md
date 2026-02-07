@@ -135,54 +135,139 @@ angular-ssr/
 
 ### Entity Relationship Diagram
 
+```mermaid
+erDiagram
+    USERS {
+        uuid id PK
+        varchar username UK
+        varchar email UK
+        varchar display_name
+        varchar avatar
+        text bio
+        boolean is_verified
+        int followers_count
+        int following_count
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    POSTS {
+        uuid id PK
+        uuid author_id FK
+        text content
+        varchar image_url
+        varchar video_url
+        enum category
+        text[] tags
+        enum visibility
+        int likes_count
+        int comments_count
+        int shares_count
+        int bookmarks_count
+        int views_count
+        boolean is_edited
+        timestamp edited_at
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+    
+    COMMENTS {
+        uuid id PK
+        uuid post_id FK
+        uuid author_id FK
+        uuid parent_id FK
+        text content
+        int likes_count
+        int replies_count
+        boolean is_edited
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+    
+    POST_LIKES {
+        uuid id PK
+        uuid user_id FK
+        uuid post_id FK
+        timestamp created_at
+    }
+    
+    POST_PINS {
+        uuid id PK
+        uuid user_id FK
+        uuid post_id FK
+        timestamp created_at
+    }
+    
+    POST_SAVES {
+        uuid id PK
+        uuid user_id FK
+        uuid post_id FK
+        timestamp created_at
+    }
+    
+    COMMENT_LIKES {
+        uuid id PK
+        uuid user_id FK
+        uuid comment_id FK
+        timestamp created_at
+    }
+    
+    USER_FOLLOWS {
+        uuid id PK
+        uuid follower_id FK
+        uuid following_id FK
+        timestamp created_at
+    }
+    
+    MEDIA {
+        uuid id PK
+        uuid post_id FK
+        uuid user_id FK
+        varchar url
+        enum type
+        int size
+        varchar mime_type
+        int width
+        int height
+        int duration
+        timestamp created_at
+    }
+
+    %% Relationships
+    USERS ||--o{ POSTS : "creates"
+    USERS ||--o{ COMMENTS : "writes"
+    USERS ||--o{ POST_LIKES : "likes"
+    USERS ||--o{ POST_PINS : "pins"
+    USERS ||--o{ POST_SAVES : "saves"
+    USERS ||--o{ COMMENT_LIKES : "likes"
+    USERS ||--o{ USER_FOLLOWS : "follows"
+    USERS ||--o{ MEDIA : "uploads"
+    
+    POSTS ||--o{ COMMENTS : "has"
+    POSTS ||--o{ POST_LIKES : "receives"
+    POSTS ||--o{ POST_PINS : "receives"
+    POSTS ||--o{ POST_SAVES : "receives"
+    POSTS ||--o{ MEDIA : "contains"
+    
+    COMMENTS ||--o{ COMMENTS : "replies_to"
+    COMMENTS ||--o{ COMMENT_LIKES : "receives"
 ```
-┌──────────────┐       ┌──────────────┐       ┌──────────────┐
-│    USERS     │       │    POSTS     │       │   COMMENTS   │
-├──────────────┤       ├──────────────┤       ├──────────────┤
-│ id (PK)      │───┐   │ id (PK)      │───┐   │ id (PK)      │
-│ username     │   │   │ author_id(FK)│◄──┘   │ post_id (FK) │◄──┐
-│ email        │   │   │ content      │       │ author_id(FK)│   │
-│ display_name │   │   │ image_url    │       │ parent_id    │───┤ (self-ref)
-│ avatar       │   │   │ video_url    │       │ content      │   │
-│ bio          │   │   │ category     │       │ likes_count  │   │
-│ is_verified  │   │   │ tags         │       │ created_at   │   │
-│ followers_cnt│   │   │ visibility   │       └──────────────┘   │
-│ following_cnt│   │   │ likes_count  │                          │
-│ created_at   │   │   │ comments_cnt │       ┌──────────────┐   │
-└──────────────┘   │   │ shares_count │       │ POST_LIKES   │   │
-        │          │   │ views_count  │       ├──────────────┤   │
-        │          │   │ created_at   │       │ user_id (FK) │   │
-        │          │   └──────────────┘       │ post_id (FK) │◄──┤
-        │          │            │             │ created_at   │   │
-        │          │            │             └──────────────┘   │
-        │          │            │                                │
-        │          │            │             ┌──────────────┐   │
-        │          │            │             │  POST_PINS   │   │
-        │          │            │             ├──────────────┤   │
-        │          │            │             │ user_id (FK) │   │
-        │          │            └────────────►│ post_id (FK) │   │
-        │          │                          │ created_at   │   │
-        │          │                          └──────────────┘   │
-        │          │                                             │
-        │          │            ┌──────────────┐                 │
-        │          └───────────►│ USER_FOLLOWS │                 │
-        │                       ├──────────────┤                 │
-        └──────────────────────►│ follower_id  │                 │
-                                │ following_id │                 │
-                                │ created_at   │                 │
-                                └──────────────┘                 │
-                                                                 │
-                                ┌──────────────┐                 │
-                                │    MEDIA     │                 │
-                                ├──────────────┤                 │
-                                │ id (PK)      │                 │
-                                │ post_id (FK) │◄────────────────┘
-                                │ user_id (FK) │
-                                │ url          │
-                                │ type         │
-                                │ size         │
-                                └──────────────┘
-```
+
+### Table Relationships Summary
+
+| Relationship | Type | Description |
+|--------------|------|-------------|
+| Users → Posts | One-to-Many | A user can create many posts |
+| Users → Comments | One-to-Many | A user can write many comments |
+| Posts → Comments | One-to-Many | A post can have many comments |
+| Comments → Comments | Self-referential | Comments can have nested replies |
+| Users ↔ Posts (Likes) | Many-to-Many | Users can like many posts |
+| Users ↔ Posts (Pins) | Many-to-Many | Users can pin posts to profile |
+| Users ↔ Posts (Saves) | Many-to-Many | Users can save posts |
+| Users ↔ Users (Follows) | Many-to-Many | Users can follow each other |
+| Posts → Media | One-to-Many | Posts can have multiple media files |
 
 ### Post Categories
 - `technology` - Tech news and updates
