@@ -1,0 +1,75 @@
+<article class="comment-item" [class.comment-item--reply]="isReply">
+  <img [src]="comment.author.avatar" [alt]="comment.author.name" class="comment-item__avatar" />
+
+  <div class="comment-item__content">
+    <div class="comment-item__header">
+      <span class="comment-item__author">{{ comment.author.name }}</span>
+      <span class="comment-item__time">{{ formatTimeAgo(comment.createdAt) }}</span>
+    </div>
+
+    <p class="comment-item__text">{{ comment.content }}</p>
+
+    <div class="comment-item__actions">
+      <button
+        class="comment-item__action"
+        [class.comment-item__action--active]="comment.isLiked"
+        (click)="onLikeToggle()"
+      >
+        {{ comment.isLiked ? '❤️' : '🤍' }} {{ comment.likes }}
+      </button>
+
+      @if (!isReply) {
+        <button class="comment-item__action" (click)="toggleReplyInput()">💬 Reply</button>
+      }
+
+      @if (isOwnComment()) {
+        <button class="comment-item__action comment-item__action--delete" (click)="onDelete()">
+          🗑️ Delete
+        </button>
+      }
+    </div>
+
+    <!-- Reply Input -->
+    @if (showReplyInput) {
+      <div class="comment-item__reply-input">
+        <img [src]="currentUserAvatar" alt="Your avatar" class="comment-item__reply-avatar" />
+        <div class="comment-item__reply-wrapper">
+          <input
+            type="text"
+            [(ngModel)]="replyText"
+            placeholder="Write a reply..."
+            class="comment-item__reply-field"
+            (keydown.enter)="submitReply()"
+          />
+          <div class="comment-item__reply-buttons">
+            <button class="comment-item__reply-cancel" (click)="toggleReplyInput()">Cancel</button>
+            <button
+              class="comment-item__reply-submit"
+              [disabled]="!replyText.trim()"
+              (click)="submitReply()"
+            >
+              Reply
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Nested Replies -->
+    @if (comment.replies && comment.replies.length > 0) {
+      <div class="comment-item__replies">
+        @for (reply of comment.replies; track trackByReplyId($index, reply)) {
+          <app-comment-item
+            [comment]="reply"
+            [currentUserId]="currentUserId"
+            [currentUserAvatar]="currentUserAvatar"
+            [isReply]="true"
+            (replyAdded)="onNestedReply($event)"
+            (deleted)="onNestedDelete($event)"
+            (likeToggled)="onNestedLikeToggle($event)"
+          />
+        }
+      </div>
+    }
+  </div>
+</article>

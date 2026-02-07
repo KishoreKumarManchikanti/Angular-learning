@@ -1,0 +1,45 @@
+<section class="comment-section">
+  <h4 class="comment-section__title">Comments ({{ post.commentsCount }})</h4>
+
+  <!-- Add Comment Input -->
+  <div class="comment-input">
+    <img [src]="currentUserAvatar" alt="Your avatar" class="comment-input__avatar" />
+    <div class="comment-input__wrapper">
+      <textarea
+        [(ngModel)]="newCommentText"
+        placeholder="Write a comment..."
+        class="comment-input__textarea"
+        rows="2"
+        (keydown.enter)="$event.preventDefault(); submitComment()"
+      ></textarea>
+      <button
+        class="comment-input__submit"
+        [disabled]="!newCommentText.trim()"
+        (click)="submitComment()"
+      >
+        Post
+      </button>
+    </div>
+  </div>
+
+  <!-- Comments List -->
+  <div class="comment-list">
+    @if (post.comments.length === 0) {
+      <div class="comment-list__empty">
+        <span class="comment-list__empty-icon">💬</span>
+        <p>No comments yet. Be the first to comment!</p>
+      </div>
+    } @else {
+      @for (comment of post.comments; track trackByCommentId($index, comment)) {
+        <app-comment-item
+          [comment]="comment"
+          [currentUserId]="currentUserId"
+          [currentUserAvatar]="currentUserAvatar"
+          (replyAdded)="onReplyAdded($event)"
+          (deleted)="onCommentDeleted($event)"
+          (likeToggled)="onCommentLikeToggled($event)"
+        />
+      }
+    }
+  </div>
+</section>

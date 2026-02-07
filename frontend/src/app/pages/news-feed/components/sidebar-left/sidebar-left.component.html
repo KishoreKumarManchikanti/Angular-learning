@@ -1,0 +1,86 @@
+<aside class="sidebar-left">
+  @if (loading) {
+    <div class="sidebar-left__loading">
+      <div class="sidebar-left__spinner"></div>
+      <span>Loading...</span>
+    </div>
+  } @else {
+    <!-- Liked Posts -->
+    <section class="sidebar-section">
+      <h3 class="sidebar-section__title">
+        <span class="sidebar-section__icon">❤️</span>
+        Liked Posts
+      </h3>
+      @if (likedPosts.length === 0) {
+        <p class="sidebar-section__empty">No liked posts yet</p>
+      } @else {
+        <ul class="sidebar-list">
+          @for (post of likedPosts; track trackByPostId($index, post)) {
+            <li class="sidebar-list__item" (click)="onPostClick(post.id)">
+              <img
+                [src]="post.author.avatar"
+                [alt]="post.author.name"
+                class="sidebar-list__avatar"
+              />
+              <div class="sidebar-list__content">
+                <span class="sidebar-list__author">{{ post.author.name }}</span>
+                <span class="sidebar-list__preview">{{ post.title }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <!-- Pinned Posts -->
+    <section class="sidebar-section">
+      <h3 class="sidebar-section__title">
+        <span class="sidebar-section__icon">📌</span>
+        Pinned Posts
+      </h3>
+      @if (pinnedPosts.length === 0) {
+        <p class="sidebar-section__empty">No pinned posts yet</p>
+      } @else {
+        <ul class="sidebar-list">
+          @for (post of pinnedPosts; track trackByPostId($index, post)) {
+            <li class="sidebar-list__item" (click)="onPostClick(post.id)">
+              <img
+                [src]="post.author.avatar"
+                [alt]="post.author.name"
+                class="sidebar-list__avatar"
+              />
+              <div class="sidebar-list__content">
+                <span class="sidebar-list__author">{{ post.author.name }}</span>
+                <span class="sidebar-list__preview">{{ post.title }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="sidebar-section">
+      <h3 class="sidebar-section__title">
+        <span class="sidebar-section__icon">🔔</span>
+        Recent Activity
+      </h3>
+      @if (recentActivity.length === 0) {
+        <p class="sidebar-section__empty">No recent activity</p>
+      } @else {
+        <ul class="activity-list">
+          @for (activity of recentActivity; track trackByActivityId($index, activity)) {
+            <li class="activity-list__item" (click)="onPostClick(activity.postId)">
+              <span class="activity-list__icon">{{ getActivityIcon(activity.type) }}</span>
+              <div class="activity-list__content">
+                <span class="activity-list__user">{{ activity.userName }}</span>
+                <span class="activity-list__action">{{ getActivityLabel(activity.type) }}</span>
+                <span class="activity-list__time">{{ formatTimeAgo(activity.createdAt) }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</aside>

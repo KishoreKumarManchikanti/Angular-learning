@@ -1,0 +1,35 @@
+export declare class DailyStats {
+    id: string;
+    date: Date;
+    newUsers: number;
+    activeUsers: number;
+    returningUsers: number;
+    totalSessions: number;
+    avgSessionDurationSeconds: number;
+    postsCreated: number;
+    commentsCreated: number;
+    mediaUploaded: number;
+    videosUploaded: number;
+    imagesUploaded: number;
+    totalLikes: number;
+    totalComments: number;
+    totalShares: number;
+    totalSaves: number;
+    totalFollows: number;
+    totalUnfollows: number;
+    totalPageViews: number;
+    totalPostViews: number;
+    totalProfileViews: number;
+    totalVideoPlays: number;
+    totalVideoCompletions: number;
+    totalSearches: number;
+    storageUsedBytes: string;
+    avgLoadTimeMs: number;
+    errorRate: number;
+    postsByCategory: Record<string, number>;
+    usersByCountry: Record<string, number>;
+    usersByDevice: Record<string, number>;
+    hourlyActiveUsers: Record<string, number>;
+    createdAt: Date;
+    updatedAt: Date;
+}

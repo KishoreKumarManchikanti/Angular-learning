@@ -1,0 +1,82 @@
+<div class="news-feed">
+  <header class="news-feed__header">
+    <h1 class="news-feed__title">News Feed</h1>
+    <p class="news-feed__subtitle">
+      Real-time updates with infinite scroll • {{ totalPosts() }} posts loaded
+    </p>
+  </header>
+
+  <div class="news-feed__layout">
+    <!-- Left Sidebar: Liked/Pinned + Recent Activity -->
+    <app-sidebar-left
+      [likedPosts]="likedPosts()"
+      [pinnedPosts]="pinnedPosts()"
+      [recentActivity]="recentActivity()"
+      [loading]="interactionsLoading() || activityLoading()"
+      (postSelected)="onSidebarPostSelected($event)"
+    />
+
+    <!-- Main Feed -->
+    <main class="news-feed__main">
+      <!-- Posts -->
+      @for (post of posts(); track trackByPostId($index, post)) {
+        <article class="news-feed__post" [attr.id]="'post-' + post.id">
+          <app-post-card
+            [post]="post"
+            [currentUserId]="currentUser.id"
+            (likeToggled)="onLikeToggled(post)"
+            (pinToggled)="onPinToggled(post)"
+            (saveToggled)="onSaveToggled(post)"
+            (commentsToggled)="onCommentsToggled(post)"
+          />
+
+          <!-- Comments Section (expandable) -->
+          @if (post.showComments) {
+            <div class="news-feed__comments">
+              @if (post.commentsLoading) {
+                <div class="news-feed__comments-loading">
+                  <div class="spinner"></div>
+                  <span>Loading comments...</span>
+                </div>
+              } @else {
+                <app-comment-section
+                  [post]="post"
+                  [currentUserId]="currentUser.id"
+                  [currentUserAvatar]="currentUser.avatar"
+                  (commentAdded)="onCommentAdded({ postId: post.id, content: $event })"
+                  (replyAdded)="onReplyAdded({ postId: post.id, commentId: $event.commentId, content: $event.content })"
+                  (commentDeleted)="onCommentDeleted({ postId: post.id, commentId: $event })"
+                  (commentLikeToggled)="onCommentLikeToggled({ postId: post.id, commentId: $event })"
+                />
+              }
+            </div>
+          }
+        </article>
+      }
+
+      <!-- Load Trigger for Infinite Scroll -->
+      <div #loadTrigger class="news-feed__load-trigger">
+        @if (isLoading()) {
+          <div class="news-feed__loading">
+            <div class="spinner"></div>
+            <span>Loading more posts...</span>
+          </div>
+        } @else if (!hasMore()) {
+          <div class="news-feed__end">
+            <span>🎉 You've reached the end!</span>
+            <p>No more posts to load</p>
+          </div>
+        }
+      </div>
+    </main>
+
+    <!-- Right Sidebar: Saved + Trending -->
+    <app-sidebar-right
+      [savedPosts]="savedPosts()"
+      [trendingTopics]="trendingTopics()"
+      [loading]="interactionsLoading() || trendingLoading()"
+      (postSelected)="onSidebarPostSelected($event)"
+      (topicSelected)="onTrendingTopicSelected($event)"
+    />
+  </div>
+</div>

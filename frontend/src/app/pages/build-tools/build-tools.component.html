@@ -1,0 +1,348 @@
+<div class="build-tools-container">
+  <header class="header">
+    <h1>Build Tools & Bundlers</h1>
+    <p class="subtitle">Understanding Webpack, esbuild, Vite, and Modern JavaScript Bundling</p>
+    <div class="current-app">
+      <span class="badge">This App Uses:</span>
+      <code>{{ currentAppBuilder }}</code>
+    </div>
+  </header>
+
+  <!-- Tab Navigation -->
+  <nav class="tabs">
+    <button [class.active]="activeTab === 'overview'" (click)="setActiveTab('overview')">
+      Build Tools Overview
+    </button>
+    <button [class.active]="activeTab === 'comparison'" (click)="setActiveTab('comparison')">
+      Comparison
+    </button>
+    <button [class.active]="activeTab === 'angular'" (click)="setActiveTab('angular')">
+      Angular Build Evolution
+    </button>
+  </nav>
+
+  <!-- Overview Tab -->
+  @if (activeTab === 'overview') {
+    <!-- Bundling Concepts -->
+    <section class="section">
+      <h2>Core Bundling Concepts</h2>
+      <div class="concepts-grid">
+        @for (concept of bundlingConcepts; track concept.concept) {
+          <div class="concept-card">
+            <span class="concept-icon">{{ concept.icon }}</span>
+            <h3>{{ concept.concept }}</h3>
+            <p>{{ concept.description }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Build Tools Cards -->
+    <section class="section">
+      <h2>Popular Build Tools</h2>
+      @for (tool of buildTools; track tool.name) {
+        <div class="tool-card">
+          <div class="tool-header">
+            <span class="tool-logo">{{ tool.logo }}</span>
+            <div class="tool-title">
+              <h3>{{ tool.name }}</h3>
+              <span class="tagline">{{ tool.tagline }}</span>
+            </div>
+            <div class="tool-meta">
+              <span class="year">Since {{ tool.year }}</span>
+              <span class="language">Written in {{ tool.language }}</span>
+            </div>
+          </div>
+
+          <p class="tool-description">{{ tool.description }}</p>
+
+          <div class="tool-approach"><strong>Approach:</strong> {{ tool.approach }}</div>
+
+          <div class="tool-details">
+            <div class="pros-cons">
+              <div class="pros">
+                <h4>✅ Pros</h4>
+                <ul>
+                  @for (pro of tool.pros; track pro) {
+                    <li>{{ pro }}</li>
+                  }
+                </ul>
+              </div>
+              <div class="cons">
+                <h4>❌ Cons</h4>
+                <ul>
+                  @for (con of tool.cons; track con) {
+                    <li>{{ con }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
+
+            <div class="used-by">
+              <h4>Used By</h4>
+              <div class="tags">
+                @for (user of tool.usedBy; track user) {
+                  <span class="tag">{{ user }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="config-example">
+              <h4>Configuration Example</h4>
+              <pre><code>{{ tool.configExample }}</code></pre>
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Comparison Tab -->
+  @if (activeTab === 'comparison') {
+    <section class="section">
+      <h2>Feature Comparison</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>📦 Webpack</th>
+              <th>⚡ esbuild</th>
+              <th>🔥 Vite</th>
+              <th>🎯 Rollup</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of comparisonMetrics; track row.metric) {
+              <tr>
+                <td>
+                  <strong>{{ row.metric }}</strong>
+                </td>
+                <td>{{ row.webpack }}</td>
+                <td>{{ row.esbuild }}</td>
+                <td>{{ row.vite }}</td>
+                <td>{{ row.rollup }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>When to Use What?</h2>
+      <div class="recommendations-grid">
+        <div class="recommendation-card webpack">
+          <h3>📦 Use Webpack When...</h3>
+          <ul>
+            <li>You need maximum flexibility and customization</li>
+            <li>Working with legacy codebases</li>
+            <li>Complex asset processing requirements</li>
+            <li>Need specific plugins not available elsewhere</li>
+            <li>Enterprise projects with existing Webpack setup</li>
+          </ul>
+        </div>
+
+        <div class="recommendation-card esbuild">
+          <h3>⚡ Use esbuild When...</h3>
+          <ul>
+            <li>Build speed is the top priority</li>
+            <li>Building TypeScript/JavaScript libraries</li>
+            <li>Simple bundling requirements</li>
+            <li>CI/CD pipeline optimization</li>
+            <li>You need a fast, low-config solution</li>
+          </ul>
+        </div>
+
+        <div class="recommendation-card vite">
+          <h3>🔥 Use Vite When...</h3>
+          <ul>
+            <li>Starting a new frontend project</li>
+            <li>Developer experience is important</li>
+            <li>Using Vue, React, or Svelte</li>
+            <li>Need fast HMR during development</li>
+            <li>Building modern SPAs</li>
+          </ul>
+        </div>
+
+        <div class="recommendation-card rollup">
+          <h3>🎯 Use Rollup When...</h3>
+          <ul>
+            <li>Building JavaScript libraries</li>
+            <li>Need smallest possible bundle size</li>
+            <li>Publishing to npm</li>
+            <li>ES module-first output required</li>
+            <li>Tree shaking is critical</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Build Speed Comparison</h2>
+      <div class="speed-chart">
+        <div class="speed-bar">
+          <span class="label">esbuild</span>
+          <div class="bar esbuild-bar" style="width: 100%">
+            <span class="time">~0.3s</span>
+          </div>
+        </div>
+        <div class="speed-bar">
+          <span class="label">Vite (dev)</span>
+          <div class="bar vite-bar" style="width: 15%">
+            <span class="time">~2s</span>
+          </div>
+        </div>
+        <div class="speed-bar">
+          <span class="label">Rollup</span>
+          <div class="bar rollup-bar" style="width: 8%">
+            <span class="time">~4s</span>
+          </div>
+        </div>
+        <div class="speed-bar">
+          <span class="label">Webpack</span>
+          <div class="bar webpack-bar" style="width: 3%">
+            <span class="time">~10s</span>
+          </div>
+        </div>
+        <p class="chart-note">
+          * Approximate times for a medium-sized project (based on esbuild benchmarks)
+        </p>
+      </div>
+    </section>
+  }
+
+  <!-- Angular Evolution Tab -->
+  @if (activeTab === 'angular') {
+    <section class="section">
+      <h2>Angular Build System Evolution</h2>
+      <div class="timeline">
+        @for (era of angularBuildEvolution; track era.version) {
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3>{{ era.version }}</h3>
+              <div class="builder-info">
+                <code>{{ era.builder }}</code>
+                <span class="bundler-tag">{{ era.bundler }}</span>
+              </div>
+              <p>{{ era.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>This Application's Build Configuration</h2>
+      <div class="current-config">
+        <div class="config-highlight">
+          <h3>angular.json Configuration</h3>
+          <pre><code>&#123;
+  "architect": &#123;
+    "build": &#123;
+      "builder": "&#64;angular/build:application",
+      "options": &#123;
+        "browser": "src/main.ts",
+        "server": "src/main.server.ts",
+        "outputMode": "server",
+        "ssr": &#123;
+          "entry": "src/server.ts"
+        &#125;
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre>
+        </div>
+
+        <div class="benefits">
+          <h3>Benefits of &#64;angular/build</h3>
+          <ul>
+            <li>
+              <strong>⚡ 2-4x faster builds</strong> - esbuild's Go-based architecture enables
+              parallel processing
+            </li>
+            <li><strong>🔄 Instant HMR</strong> - Vite-powered dev server for rapid feedback</li>
+            <li>
+              <strong>📦 Smaller bundles</strong> - Better tree shaking and dead code elimination
+            </li>
+            <li><strong>🎯 SSR optimized</strong> - Built-in support for server-side rendering</li>
+            <li><strong>🧩 Simplified config</strong> - Less configuration needed than Webpack</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Migration from Webpack</h2>
+      <div class="migration-guide">
+        <div class="migration-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Update angular.json</h4>
+            <p>
+              Change builder from <code>&#64;angular-devkit/build-angular:browser</code> to
+              <code>&#64;angular/build:application</code>
+            </p>
+          </div>
+        </div>
+        <div class="migration-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Update Entry Points</h4>
+            <p>Replace <code>main</code> with <code>browser</code> for client entry point</p>
+          </div>
+        </div>
+        <div class="migration-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Remove Polyfills</h4>
+            <p>The <code>polyfills</code> option is no longer needed - handled automatically</p>
+          </div>
+        </div>
+        <div class="migration-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Test & Verify</h4>
+            <p>Run <code>ng build</code> and <code>ng serve</code> to verify the migration</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Summary -->
+  <section class="section summary">
+    <h2>Key Takeaways</h2>
+    <div class="summary-content">
+      <div class="takeaway">
+        <span class="icon">🚀</span>
+        <p>
+          <strong>Modern Angular uses esbuild</strong> - No longer relies on Webpack. The new
+          &#64;angular/build package leverages esbuild for dramatically faster builds.
+        </p>
+      </div>
+      <div class="takeaway">
+        <span class="icon">🔥</span>
+        <p>
+          <strong>Vite is changing the game</strong> - Native ESM dev servers provide instant
+          startup and HMR, revolutionizing developer experience.
+        </p>
+      </div>
+      <div class="takeaway">
+        <span class="icon">📦</span>
+        <p>
+          <strong>Webpack is still relevant</strong> - For complex enterprise applications with
+          specific requirements, Webpack's flexibility remains valuable.
+        </p>
+      </div>
+      <div class="takeaway">
+        <span class="icon">⚡</span>
+        <p>
+          <strong>Speed matters</strong> - Tools written in Go (esbuild) or Rust (SWC, Turbopack)
+          are 10-100x faster than JavaScript-based alternatives.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>

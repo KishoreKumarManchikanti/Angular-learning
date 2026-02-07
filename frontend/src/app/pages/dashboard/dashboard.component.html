@@ -1,0 +1,30 @@
+<div class="dashboard-page">
+  <h1>Dashboard</h1>
+
+  <div class="server-status">
+    <h3>Server Status</h3>
+    <p>{{ serverMessage() }}</p>
+  </div>
+
+  <div class="stats-grid">
+    @for (stat of stats(); track stat.label) {
+      <div class="stat-card">
+        <div class="stat-icon">{{ stat.icon }}</div>
+        <div class="stat-info">
+          <h3>{{ stat.label }}</h3>
+          <div class="stat-value">{{ stat.value }}</div>
+          <span class="stat-change positive">{{ stat.change }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-card">
+      <h3>Activity Overview</h3>
+      <div class="chart-placeholder">
+        <p>📊 Chart visualization would go here</p>
+      </div>
+    </div>
+  </div>
+</div>

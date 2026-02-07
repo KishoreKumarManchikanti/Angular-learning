@@ -1,0 +1,94 @@
+<div class="ssr-basics-page">
+  <h1>Understanding Server-Side Rendering (SSR)</h1>
+
+  <div class="render-info-card">
+    <h2>Current Render Context</h2>
+    <p class="platform-info">{{ platformInfo() }}</p>
+    <p class="render-time">Rendered at: {{ renderTime() }}</p>
+    <div class="platform-badges">
+      <span class="badge" [class.active]="isServer()">Server</span>
+      <span class="badge" [class.active]="isBrowser()">Browser</span>
+    </div>
+  </div>
+
+  <section class="content-section">
+    <h2>What is Server-Side Rendering?</h2>
+    <div class="info-card">
+      <p>
+        Server-Side Rendering (SSR) is a technique where web pages are rendered on the server
+        instead of in the browser. The server generates the full HTML content and sends it to the
+        client, which can display it immediately without waiting for JavaScript to execute.
+      </p>
+      <div class="comparison">
+        <div class="comparison-item">
+          <h4>❌ Without SSR (CSR)</h4>
+          <ol>
+            <li>Browser requests page</li>
+            <li>Server sends empty HTML + JS bundle</li>
+            <li>Browser downloads JavaScript</li>
+            <li>JavaScript executes and renders content</li>
+            <li>User finally sees the page</li>
+          </ol>
+        </div>
+        <div class="comparison-item">
+          <h4>✅ With SSR</h4>
+          <ol>
+            <li>Browser requests page</li>
+            <li>Server renders full HTML</li>
+            <li>User sees content immediately</li>
+            <li>JavaScript hydrates for interactivity</li>
+            <li>App becomes fully interactive</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <h2>Key Benefits of SSR</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="icon">🚀</div>
+        <h3>Faster First Paint</h3>
+        <p>Users see content immediately without waiting for JavaScript to download and execute.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">🔍</div>
+        <h3>SEO Optimization</h3>
+        <p>Search engine crawlers can easily index pre-rendered HTML content.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">📱</div>
+        <h3>Better for Slow Devices</h3>
+        <p>Less JavaScript processing required on the client device.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">🔗</div>
+        <h3>Social Media Previews</h3>
+        <p>Open Graph meta tags are available for link previews on social platforms.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <h2>Angular SSR Architecture</h2>
+    <div class="info-card">
+      <div class="architecture-diagram">
+        <div class="arch-item client">
+          <h4>Browser (Client)</h4>
+          <p>Hydration & Interactivity</p>
+        </div>
+        <div class="arch-arrow">⬆️ HTML + Hydration ⬇️</div>
+        <div class="arch-item server">
+          <h4>Angular SSR Server</h4>
+          <p>Renders Angular components to HTML</p>
+        </div>
+        <div class="arch-arrow">⬆️ API Calls ⬇️</div>
+        <div class="arch-item backend">
+          <h4>NestJS Backend</h4>
+          <p>REST API & Business Logic</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

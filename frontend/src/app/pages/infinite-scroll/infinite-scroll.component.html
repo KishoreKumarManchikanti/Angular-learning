@@ -1,0 +1,287 @@
+<div class="infinite-scroll-container">
+  <!-- Header -->
+  <header class="page-header">
+    <h1>Infinite Scroll Feed</h1>
+    <p class="subtitle">Instagram-style lazy loading as you scroll</p>
+  </header>
+
+  <!-- How It Works Section -->
+  <section class="explanation-section">
+    <h2>How Infinite Scroll Works</h2>
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div class="step-icon">📜</div>
+        <div class="step-content">
+          <h3>1. User Scrolls</h3>
+          <p>User scrolls down the feed towards the bottom of loaded content</p>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">👁️</div>
+        <div class="step-content">
+          <h3>2. Observer Detects</h3>
+          <p>IntersectionObserver detects when the load trigger enters viewport</p>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">📡</div>
+        <div class="step-content">
+          <h3>3. Fetch Data</h3>
+          <p>API call is triggered to fetch the next batch of posts</p>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">➕</div>
+        <div class="step-content">
+          <h3>4. Append Content</h3>
+          <p>New posts are appended to the existing list seamlessly</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-example">
+      <h3>Implementation Code</h3>
+      <pre><code>// Using Intersection Observer API
+const observer = new IntersectionObserver((entries) => &#123;
+  entries.forEach((entry) => &#123;
+    if (entry.isIntersecting && !isLoading && hasMore) &#123;
+      loadMorePosts(); // Trigger data fetch
+    &#125;
+  &#125;);
+&#125;, &#123; rootMargin: '100px', threshold: 0.1 &#125;);
+
+observer.observe(loadTriggerElement);</code></pre>
+    </div>
+  </section>
+
+  <!-- Metrics Dashboard -->
+  <section class="metrics-dashboard">
+    <h2>Live Metrics</h2>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-icon">📊</span>
+        <span class="metric-value">{{ totalPosts() }}</span>
+        <span class="metric-label">Posts Loaded</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-icon">🔄</span>
+        <span class="metric-value">{{ loadedBatches() }}</span>
+        <span class="metric-label">Load Batches</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-icon">⏱️</span>
+        <span class="metric-value">{{ metrics().lastLoadTime }}ms</span>
+        <span class="metric-label">Last Load Time</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-icon">📦</span>
+        <span class="metric-value">{{ POSTS_PER_LOAD }}</span>
+        <span class="metric-label">Posts Per Batch</span>
+      </div>
+    </div>
+    <button class="reset-btn" (click)="resetFeed()">🔄 Reset Feed</button>
+  </section>
+
+  <!-- Feed Container -->
+  <section class="feed-section">
+    <h2>Social Feed Demo</h2>
+    <p class="feed-instruction">👇 Scroll down to load more posts automatically</p>
+
+    <div class="feed-container">
+      @for (post of posts(); track post.id) {
+        <article class="post-card" [attr.data-post-id]="post.id">
+          <!-- Post Header -->
+          <div class="post-header">
+            <img [src]="post.avatar" [alt]="post.username" class="avatar" loading="lazy" />
+            <div class="user-info">
+              <span class="username">{{ post.username }}</span>
+              <span class="time-ago">{{ post.timeAgo }}</span>
+            </div>
+            <button class="more-btn">•••</button>
+          </div>
+
+          <!-- Post Image -->
+          <div class="post-image-container">
+            <img
+              [src]="post.image"
+              [alt]="'Post by ' + post.username"
+              class="post-image"
+              loading="lazy"
+            />
+            <span class="post-number">#{{ post.id }}</span>
+          </div>
+
+          <!-- Post Actions -->
+          <div class="post-actions">
+            <button
+              class="action-btn like-btn"
+              [class.liked]="post.liked"
+              (click)="toggleLike(post)"
+            >
+              @if (post.liked) {
+                ❤️
+              } @else {
+                🤍
+              }
+            </button>
+            <button class="action-btn">💬</button>
+            <button class="action-btn">📤</button>
+            <button class="action-btn bookmark-btn">🔖</button>
+          </div>
+
+          <!-- Post Stats -->
+          <div class="post-stats">
+            <span class="likes">{{ formatNumber(post.likes) }} likes</span>
+          </div>
+
+          <!-- Post Caption -->
+          <div class="post-caption">
+            <span class="username">{{ post.username }}</span>
+            <span class="caption-text">{{ post.caption }}</span>
+          </div>
+
+          <!-- Comments Preview -->
+          <button class="view-comments">View all {{ post.comments }} comments</button>
+        </article>
+      }
+
+      <!-- Loading Indicator -->
+      @if (isLoading()) {
+        <div class="loading-indicator">
+          <div class="loading-spinner"></div>
+          <p>Loading more posts...</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @if (error()) {
+        <div class="error-state">
+          <span class="error-icon">⚠️</span>
+          <p>{{ error() }}</p>
+          <button class="retry-btn" (click)="retryLoad()">Try Again</button>
+        </div>
+      }
+
+      <!-- End of Feed -->
+      @if (!hasMore() && !isLoading()) {
+        <div class="end-of-feed">
+          <span class="end-icon">✅</span>
+          <p>You've seen all {{ totalPosts() }} posts!</p>
+          <button class="reset-btn" (click)="resetFeed()">Start Over</button>
+        </div>
+      }
+
+      <!-- Invisible Load Trigger -->
+      <div #loadTrigger class="load-trigger"></div>
+    </div>
+  </section>
+
+  <!-- Technical Details -->
+  <section class="technical-section">
+    <h2>Technical Implementation</h2>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <h3>🔍 Intersection Observer</h3>
+        <p>
+          Native browser API that efficiently detects when elements enter/exit the viewport. Much
+          better performance than scroll event listeners.
+        </p>
+        <ul>
+          <li><code>rootMargin: '100px'</code> - Preload before visible</li>
+          <li><code>threshold: 0.1</code> - Trigger at 10% visibility</li>
+        </ul>
+      </div>
+
+      <div class="tech-card">
+        <h3>📦 Batch Loading</h3>
+        <p>
+          Load data in small batches (5 posts) to balance performance and user experience. Prevents
+          overwhelming the browser with too much content.
+        </p>
+        <ul>
+          <li>Reduces initial load time</li>
+          <li>Conserves bandwidth</li>
+          <li>Better memory management</li>
+        </ul>
+      </div>
+
+      <div class="tech-card">
+        <h3>🖼️ Lazy Image Loading</h3>
+        <p>
+          Uses native <code>loading="lazy"</code> attribute for images. Browser defers loading
+          offscreen images until user scrolls near them.
+        </p>
+        <ul>
+          <li>Native browser support</li>
+          <li>No JavaScript required</li>
+          <li>Automatic optimization</li>
+        </ul>
+      </div>
+
+      <div class="tech-card">
+        <h3>⚡ Angular Signals</h3>
+        <p>
+          Uses Angular's new Signals API for reactive state management. Efficient change detection
+          without Zone.js overhead.
+        </p>
+        <ul>
+          <li><code>signal()</code> for state</li>
+          <li><code>computed()</code> for derived values</li>
+          <li><code>update()</code> for mutations</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Best Practices -->
+  <section class="best-practices">
+    <h2>Best Practices</h2>
+    <div class="practices-list">
+      <div class="practice">
+        <span class="practice-icon">✅</span>
+        <div>
+          <h4>Debounce/Throttle</h4>
+          <p>Prevent multiple simultaneous requests by tracking loading state</p>
+        </div>
+      </div>
+      <div class="practice">
+        <span class="practice-icon">✅</span>
+        <div>
+          <h4>Loading States</h4>
+          <p>Always show loading indicators to provide feedback to users</p>
+        </div>
+      </div>
+      <div class="practice">
+        <span class="practice-icon">✅</span>
+        <div>
+          <h4>Error Handling</h4>
+          <p>Gracefully handle failures with retry options</p>
+        </div>
+      </div>
+      <div class="practice">
+        <span class="practice-icon">✅</span>
+        <div>
+          <h4>End State</h4>
+          <p>Clearly indicate when all content has been loaded</p>
+        </div>
+      </div>
+      <div class="practice">
+        <span class="practice-icon">✅</span>
+        <div>
+          <h4>Preload Buffer</h4>
+          <p>Use rootMargin to start loading before user reaches the end</p>
+        </div>
+      </div>
+      <div class="practice">
+        <span class="practice-icon">✅</span>
+        <div>
+          <h4>Virtual Scrolling</h4>
+          <p>For very large lists, consider CDK virtual scroll for DOM recycling</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

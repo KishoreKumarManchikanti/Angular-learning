@@ -1,0 +1,216 @@
+.comment-item {
+  display: flex;
+  gap: 0.75rem;
+
+  &--reply {
+    margin-top: 0.75rem;
+
+    .comment-item__avatar {
+      width: 28px;
+      height: 28px;
+    }
+
+    .comment-item__text {
+      font-size: 0.85rem;
+    }
+  }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  &__author {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+  }
+
+  &__time {
+    font-size: 0.75rem;
+    color: #888;
+  }
+
+  &__text {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__action {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    color: #666;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    &:hover {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    &--active {
+      color: #e74c3c;
+    }
+
+    &--delete {
+      &:hover {
+        background: #fee;
+        color: #c0392b;
+      }
+    }
+  }
+
+  &__reply-input {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  &__reply-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  &__reply-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__reply-field {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: #0066cc;
+    }
+
+    &::placeholder {
+      color: #999;
+    }
+  }
+
+  &__reply-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  &__reply-cancel {
+    padding: 0.35rem 0.75rem;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #666;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+
+  &__reply-submit {
+    padding: 0.35rem 0.75rem;
+    background: #0066cc;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: white;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      opacity 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #0052a3;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__replies {
+    margin-top: 0.75rem;
+    padding-left: 0.5rem;
+    border-left: 2px solid #e5e5e5;
+  }
+}
+
+@media (max-width: 768px) {
+  .comment-item {
+    &__avatar {
+      width: 32px;
+      height: 32px;
+    }
+
+    &--reply .comment-item__avatar {
+      width: 24px;
+      height: 24px;
+    }
+
+    &__author {
+      font-size: 0.85rem;
+    }
+
+    &__text {
+      font-size: 0.85rem;
+    }
+
+    &__actions {
+      gap: 0.75rem;
+    }
+
+    &__action {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
+}

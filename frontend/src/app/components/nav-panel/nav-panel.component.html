@@ -1,0 +1,44 @@
+<nav class="nav-panel">
+  <div class="nav-brand">
+    <a routerLink="/">Angular SSR App</a>
+  </div>
+  <ul class="nav-links">
+    <li>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Home
+      </a>
+    </li>
+    <li>
+      <a routerLink="/dashboard" routerLinkActive="active"> Dashboard </a>
+    </li>
+    <li>
+      <a routerLink="/news-feed" routerLinkActive="active"> News Feed </a>
+    </li>
+    <li>
+      <a routerLink="/about" routerLinkActive="active"> About </a>
+    </li>
+    <li class="dropdown">
+      <span class="dropdown-toggle">Learn SSR ▾</span>
+      <ul class="dropdown-menu">
+        <li>
+          <a routerLink="/architecture" routerLinkActive="active">Architecture</a>
+        </li>
+        <li>
+          <a routerLink="/build-tools" routerLinkActive="active">Build Tools</a>
+        </li>
+        <li>
+          <a routerLink="/ssr-basics" routerLinkActive="active">SSR Basics</a>
+        </li>
+        <li>
+          <a routerLink="/render-modes" routerLinkActive="active">Render Modes</a>
+        </li>
+        <li>
+          <a routerLink="/hydration-demo" routerLinkActive="active">Hydration Demo</a>
+        </li>
+        <li>
+          <a routerLink="/infinite-scroll" routerLinkActive="active">Infinite Scroll</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>

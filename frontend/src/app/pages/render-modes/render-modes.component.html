@@ -1,0 +1,173 @@
+<div class="render-modes-page">
+  <h1>Angular SSR Render Modes</h1>
+
+  <section class="intro-section">
+    <p>
+      Angular SSR provides different render modes to optimize your application based on the nature
+      of each route. Understanding when to use each mode is crucial for performance.
+    </p>
+  </section>
+
+  <section class="modes-section">
+    <h2>Available Render Modes</h2>
+
+    <div class="mode-cards">
+      <div class="mode-card prerender">
+        <div class="mode-header">
+          <span class="mode-icon">📦</span>
+          <h3>RenderMode.Prerender</h3>
+          <span class="mode-badge">Build Time</span>
+        </div>
+        <div class="mode-content">
+          <p><strong>What it does:</strong> Generates static HTML at build time.</p>
+          <p><strong>Best for:</strong></p>
+          <ul>
+            <li>Static pages (About, Contact, FAQ)</li>
+            <li>Blog posts and documentation</li>
+            <li>Landing pages</li>
+            <li>Content that rarely changes</li>
+          </ul>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>✅ Pros</h4>
+              <ul>
+                <li>Fastest load time</li>
+                <li>No server needed at runtime</li>
+                <li>Can be served from CDN</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>⚠️ Cons</h4>
+              <ul>
+                <li>Content is static</li>
+                <li>Requires rebuild for updates</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-card server">
+        <div class="mode-header">
+          <span class="mode-icon">🖥️</span>
+          <h3>RenderMode.Server</h3>
+          <span class="mode-badge">Request Time</span>
+        </div>
+        <div class="mode-content">
+          <p><strong>What it does:</strong> Renders HTML on the server for each request.</p>
+          <p><strong>Best for:</strong></p>
+          <ul>
+            <li>Dynamic content (dashboards)</li>
+            <li>Personalized pages</li>
+            <li>Real-time data display</li>
+            <li>User-specific content</li>
+          </ul>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>✅ Pros</h4>
+              <ul>
+                <li>Always fresh content</li>
+                <li>SEO friendly</li>
+                <li>Fast first paint</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>⚠️ Cons</h4>
+              <ul>
+                <li>Requires running server</li>
+                <li>Higher server load</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-card client">
+        <div class="mode-header">
+          <span class="mode-icon">🌐</span>
+          <h3>RenderMode.Client</h3>
+          <span class="mode-badge">Browser Only</span>
+        </div>
+        <div class="mode-content">
+          <p><strong>What it does:</strong> Renders entirely in the browser (traditional SPA).</p>
+          <p><strong>Best for:</strong></p>
+          <ul>
+            <li>Highly interactive pages</li>
+            <li>Admin panels behind auth</li>
+            <li>Pages using browser-only APIs</li>
+            <li>WebSocket heavy features</li>
+          </ul>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>✅ Pros</h4>
+              <ul>
+                <li>Full browser API access</li>
+                <li>No SSR complexity</li>
+                <li>Lower server costs</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>⚠️ Cons</h4>
+              <ul>
+                <li>Slower initial load</li>
+                <li>Not SEO friendly</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="code-section">
+    <h2>How to Configure Render Modes</h2>
+
+    <div class="code-block">
+      <h3>📁 app.routes.server.ts</h3>
+      <pre><code>{{ codeExamples.serverRoutes }}</code></pre>
+    </div>
+
+    <div class="code-block">
+      <h3>🔍 Platform Detection</h3>
+      <pre><code>{{ codeExamples.platformCheck }}</code></pre>
+    </div>
+
+    <div class="code-block">
+      <h3>⚡ HTTP Transfer State</h3>
+      <pre><code>{{ codeExamples.httpTransfer }}</code></pre>
+    </div>
+  </section>
+
+  <section class="tips-section">
+    <h2>💡 Best Practices</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h4>Avoid Browser APIs on Server</h4>
+        <p>
+          Don't use <code>window</code>, <code>document</code>, or <code>localStorage</code> without
+          checking the platform first.
+        </p>
+      </div>
+      <div class="tip-card">
+        <h4>Use Transfer State</h4>
+        <p>
+          Angular automatically transfers HTTP responses from server to client, preventing duplicate
+          API calls.
+        </p>
+      </div>
+      <div class="tip-card">
+        <h4>Lazy Load Routes</h4>
+        <p>
+          Use <code>loadComponent</code> for code splitting. SSR works seamlessly with lazy-loaded
+          components.
+        </p>
+      </div>
+      <div class="tip-card">
+        <h4>Choose Render Mode Wisely</h4>
+        <p>
+          Match the render mode to your route's requirements. Not every page needs server rendering.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>

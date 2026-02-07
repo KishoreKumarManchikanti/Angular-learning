@@ -1,0 +1,72 @@
+<aside class="sidebar-right">
+  @if (loading) {
+    <div class="sidebar-right__loading">
+      <div class="sidebar-right__spinner"></div>
+      <span>Loading...</span>
+    </div>
+  } @else {
+    <!-- Saved Posts -->
+    <section class="sidebar-section">
+      <h3 class="sidebar-section__title">
+        <span class="sidebar-section__icon">🔖</span>
+        Saved Posts
+      </h3>
+      @if (savedPosts.length === 0) {
+        <p class="sidebar-section__empty">No saved posts yet</p>
+      } @else {
+        <ul class="sidebar-list">
+          @for (post of savedPosts; track trackByPostId($index, post)) {
+            <li class="sidebar-list__item" (click)="onPostClick(post.id)">
+              <img
+                [src]="post.author.avatar"
+                [alt]="post.author.name"
+                class="sidebar-list__avatar"
+              />
+              <div class="sidebar-list__content">
+                <span class="sidebar-list__author">{{ post.author.name }}</span>
+                <span class="sidebar-list__preview">{{ post.title }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <!-- Trending Topics -->
+    <section class="sidebar-section">
+      <h3 class="sidebar-section__title">
+        <span class="sidebar-section__icon">🔥</span>
+        Trending Topics
+      </h3>
+      @if (trendingTopics.length === 0) {
+        <p class="sidebar-section__empty">No trending topics</p>
+      } @else {
+        <ul class="trending-list">
+          @for (topic of trendingTopics; track trackByTopic($index, topic)) {
+            <li class="trending-list__item" (click)="onTopicClick(topic.tag)">
+              <div class="trending-list__rank">{{ $index + 1 }}</div>
+              <div class="trending-list__content">
+                <span class="trending-list__tag">#{{ topic.tag }}</span>
+                <span class="trending-list__count">{{ formatCount(topic.postCount) }} posts</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <!-- Suggestions / Promo -->
+    <section class="sidebar-section sidebar-section--promo">
+      <h3 class="sidebar-section__title">
+        <span class="sidebar-section__icon">💡</span>
+        Quick Tips
+      </h3>
+      <div class="promo-content">
+        <p>📌 Pin posts to read later</p>
+        <p>❤️ Like posts to show appreciation</p>
+        <p>🔖 Save posts to your collection</p>
+        <p>💬 Comment to join the conversation</p>
+      </div>
+    </section>
+  }
+</aside>

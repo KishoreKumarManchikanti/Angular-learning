@@ -1,0 +1,154 @@
+<article class="news-card">
+  <!-- Card Header -->
+  <div class="card-header">
+    <img [src]="post.author.avatar" [alt]="post.author.name" class="author-avatar" />
+    <div class="author-info">
+      <div class="author-name">
+        {{ post.author.name }}
+        @if (post.author.verified) {
+          <span class="verified-badge" title="Verified">✓</span>
+        }
+      </div>
+      <div class="post-meta">
+        <span class="username">&#64;{{ post.author.username }}</span>
+        <span class="separator">•</span>
+        <span class="time">{{ getTimeAgo(post.timestamp) }}</span>
+        <span class="separator">•</span>
+        <span class="category-tag">{{ getCategoryIcon(post.category) }} {{ post.category }}</span>
+      </div>
+    </div>
+    <button class="pin-btn" [class.active]="post.isPinned" (click)="onPinClick()" title="Pin post">
+      📌
+    </button>
+  </div>
+
+  <!-- Card Content -->
+  <div class="card-content">
+    <p class="post-text">{{ post.content }}</p>
+
+    <!-- Media Gallery -->
+    @if (post.media && post.media.length > 0) {
+      <div
+        class="post-media-gallery"
+        [class.single]="post.media.length === 1"
+        [class.grid-2]="post.media.length === 2"
+        [class.grid-3]="post.media.length === 3"
+        [class.grid-4]="post.media.length >= 4"
+      >
+        @for (mediaItem of post.media.slice(0, 4); track mediaItem.id; let i = $index) {
+          <div class="media-item" [class.video-item]="mediaItem.type === 'video'">
+            @if (mediaItem.type === 'image' || mediaItem.type === 'gif') {
+              <img
+                [src]="mediaItem.url"
+                [alt]="post.content"
+                class="post-image"
+                loading="lazy"
+                (click)="openMediaViewer(i)"
+              />
+            }
+            @if (mediaItem.type === 'video') {
+              <div class="video-container">
+                <video
+                  #videoPlayer
+                  [src]="mediaItem.url"
+                  [poster]="mediaItem.thumbnail"
+                  [muted]="mediaItem.isMuted !== false"
+                  [attr.data-media-id]="mediaItem.id"
+                  class="post-video"
+                  playsinline
+                  preload="metadata"
+                  (click)="toggleVideoPlay($event, mediaItem)"
+                  (play)="onVideoPlay(mediaItem)"
+                  (pause)="onVideoPause(mediaItem)"
+                  (timeupdate)="onVideoTimeUpdate($event, mediaItem)"
+                  (ended)="onVideoEnded(mediaItem)"
+                >
+                  Your browser does not support video playback.
+                </video>
+
+                <!-- Video Controls Overlay -->
+                <div class="video-controls-overlay" [class.playing]="mediaItem.isPlaying">
+                  <button
+                    class="video-play-btn"
+                    (click)="toggleVideoPlay($event, mediaItem)"
+                    [attr.aria-label]="mediaItem.isPlaying ? 'Pause' : 'Play'"
+                  >
+                    @if (!mediaItem.isPlaying) {
+                      <span class="play-icon">▶</span>
+                    }
+                  </button>
+
+                  <div class="video-bottom-controls">
+                    <div class="video-progress" (click)="seekVideo($event, mediaItem)">
+                      <div
+                        class="video-progress-filled"
+                        [style.width.%]="getVideoProgress(mediaItem)"
+                      ></div>
+                    </div>
+
+                    <div class="video-controls-row">
+                      <span class="video-time">
+                        {{ formatVideoDuration(mediaItem.currentTime || 0) }} /
+                        {{ formatVideoDuration(mediaItem.duration || 0) }}
+                      </span>
+                      <button
+                        class="video-mute-btn"
+                        (click)="toggleVideoMute($event, mediaItem)"
+                        [attr.aria-label]="mediaItem.isMuted ? 'Unmute' : 'Mute'"
+                      >
+                        {{ mediaItem.isMuted !== false ? '🔇' : '🔊' }}
+                      </button>
+                      <button
+                        class="video-fullscreen-btn"
+                        (click)="toggleFullscreen($event, mediaItem)"
+                        aria-label="Fullscreen"
+                      >
+                        ⛶
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                @if (!mediaItem.isPlaying && mediaItem.duration) {
+                  <span class="video-duration-badge">
+                    {{ formatVideoDuration(mediaItem.duration) }}
+                  </span>
+                }
+              </div>
+            }
+
+            @if (i === 3 && post.media && post.media.length > 4) {
+              <div class="more-media-overlay" (click)="openMediaViewer(i)">
+                +{{ post.media.length - 4 }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Card Actions -->
+  <div class="card-actions">
+    <button class="action-btn like-btn" [class.active]="post.isLiked" (click)="onLikeClick()">
+      <span class="icon">{{ post.isLiked ? '❤️' : '🤍' }}</span>
+      <span class="count">{{ formatNumber(post.likes) }}</span>
+    </button>
+    <button
+      class="action-btn comment-btn"
+      [class.active]="post.showComments"
+      (click)="onCommentsClick()"
+    >
+      <span class="icon">💬</span>
+      <span class="count">{{ formatNumber(post.commentsCount) }}</span>
+    </button>
+    <button class="action-btn share-btn">
+      <span class="icon">🔄</span>
+      <span class="count">{{ formatNumber(post.shares) }}</span>
+    </button>
+    <button class="action-btn save-btn" [class.active]="post.isSaved" (click)="onSaveClick()">
+      <span class="icon">{{ post.isSaved ? '🔖' : '📑' }}</span>
+      <span class="count">{{ formatNumber(post.bookmarks) }}</span>
+    </button>
+  </div>
+</article>

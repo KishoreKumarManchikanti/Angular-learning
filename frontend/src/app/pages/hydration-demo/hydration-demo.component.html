@@ -1,0 +1,134 @@
+<div class="hydration-demo-page">
+  <h1>Understanding Hydration</h1>
+
+  <section class="intro-card">
+    <h2>What is Hydration?</h2>
+    <p>
+      Hydration is the process where Angular takes the static HTML rendered by the server and
+      "brings it to life" by attaching event listeners and making it interactive. This happens
+      seamlessly in the background after the initial page load.
+    </p>
+  </section>
+
+  <section class="status-section">
+    <div class="status-cards">
+      <div class="status-card">
+        <h3>🖥️ Server Render Time</h3>
+        <p class="time">{{ serverTime() }}</p>
+      </div>
+      <div class="status-card">
+        <h3>🌐 Client Hydration Time</h3>
+        <p class="time">{{ clientTime() || 'Waiting...' }}</p>
+      </div>
+      <div class="status-card" [class.hydrated]="isHydrated()">
+        <h3>⚡ Hydration Status</h3>
+        <p class="status">{{ isHydrated() ? '✅ Fully Hydrated' : '⏳ Hydrating...' }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps-section">
+    <h2>Hydration Process</h2>
+    <div class="steps-timeline">
+      @for (step of hydrationSteps(); track step.step; let i = $index) {
+        <div class="step" [class.completed]="step.completed">
+          <div class="step-number">{{ i + 1 }}</div>
+          <div class="step-content">
+            <p>{{ step.step }}</p>
+          </div>
+          <div class="step-status">
+            @if (step.completed) {
+              <span class="check">✓</span>
+            } @else {
+              <span class="pending">○</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="interactive-section">
+    <h2>Interactive Demo</h2>
+    <p class="demo-note">
+      This button only works after hydration is complete. Try clicking before and after hydration!
+    </p>
+
+    <div class="counter-demo">
+      <div class="counter-display">
+        <span class="count">{{ clickCount() }}</span>
+        <span class="label">Clicks</span>
+      </div>
+      <div class="counter-buttons">
+        <button class="btn primary" (click)="incrementCount()">Click Me!</button>
+        <button class="btn secondary" (click)="resetDemo()">Reset</button>
+      </div>
+    </div>
+
+    <div class="hydration-note" [class.visible]="isHydrated()">
+      @if (isHydrated()) {
+        <p>🎉 The app is now fully interactive! Event listeners are attached.</p>
+      } @else {
+        <p>⏳ Buttons won't work until hydration completes...</p>
+      }
+    </div>
+  </section>
+
+  <section class="concepts-section">
+    <h2>Key Hydration Concepts</h2>
+
+    <div class="concept-cards">
+      <div class="concept-card">
+        <div class="concept-icon">🔄</div>
+        <h3>Event Replay</h3>
+        <p>
+          Angular can capture user interactions during hydration and replay them once the app is
+          fully interactive. Use <code>withEventReplay()</code> to enable this.
+        </p>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-icon">📦</div>
+        <h3>Transfer State</h3>
+        <p>
+          Data fetched on the server is transferred to the client to avoid duplicate API calls.
+          Angular handles this automatically with HttpClient.
+        </p>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-icon">🎯</div>
+        <h3>Incremental Hydration</h3>
+        <p>
+          Angular can hydrate components progressively, prioritizing visible content first for
+          better perceived performance.
+        </p>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-icon">⚡</div>
+        <h3>Lazy Hydration</h3>
+        <p>
+          Components below the fold can be hydrated later, reducing initial JavaScript execution and
+          improving Time to Interactive.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="code-example">
+    <h2>Enabling Hydration</h2>
+    <div class="code-block">
+      <pre><code>// app.config.ts
+import &#123; provideClientHydration, withEventReplay &#125; from '&#64;angular/platform-browser';
+
+export const appConfig: ApplicationConfig = &#123;
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(withFetch()),
+    provideClientHydration(withEventReplay())  // Enable hydration with event replay
+  ]
+&#125;;</code></pre>
+    </div>
+  </section>
+</div>

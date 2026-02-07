@@ -1,0 +1,296 @@
+<div class="architecture-container">
+  <header class="header">
+    <h1>Application Architecture</h1>
+    <p class="subtitle">Angular 21 SSR with @angular/ssr (NOT Angular Universal)</p>
+  </header>
+
+  <!-- Important Notice -->
+  <section class="notice-section">
+    <div class="notice warning">
+      <h3>⚠️ Angular Universal vs @angular/ssr</h3>
+      <p>
+        <strong>This application does NOT use Angular Universal.</strong> Starting from Angular 17,
+        Angular Universal was deprecated and replaced by the new
+        <code>&#64;angular/ssr</code> package. All Universal functionality has been merged into this
+        modern SSR solution.
+      </p>
+      <div class="comparison">
+        <div class="old">
+          <h4>❌ Old (Angular Universal)</h4>
+          <ul>
+            <li>&#64;nguniversal/express-engine</li>
+            <li>&#64;nguniversal/builders</li>
+            <li>NgModules based</li>
+            <li>Deprecated in Angular 17</li>
+          </ul>
+        </div>
+        <div class="new">
+          <h4>✅ Current (&#64;angular/ssr)</h4>
+          <ul>
+            <li>&#64;angular/ssr</li>
+            <li>&#64;angular/build:application</li>
+            <li>Standalone components</li>
+            <li>Angular 17+ standard</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Diagram -->
+  <section class="section">
+    <h2>System Architecture</h2>
+    <div class="architecture-diagram">
+      <div class="layer client-layer">
+        <h3>Client Browser</h3>
+        <div class="components">
+          <div class="component">Angular App</div>
+          <div class="component">Hydrated Components</div>
+          <div class="component">Event Replay</div>
+        </div>
+      </div>
+
+      <div class="arrow">↓ Initial Request / ↑ Hydration</div>
+
+      <div class="layer ssr-layer">
+        <h3>SSR Server (Express + &#64;angular/ssr)</h3>
+        <div class="components">
+          <div class="component">AngularNodeAppEngine</div>
+          <div class="component">Static File Serving</div>
+          <div class="component">Request Handler</div>
+        </div>
+        <div class="port">Port: 4000</div>
+      </div>
+
+      <div class="arrow">↓ API Calls</div>
+
+      <div class="layer api-layer">
+        <h3>Backend API (NestJS)</h3>
+        <div class="components">
+          <div class="component">REST Controllers</div>
+          <div class="component">Services</div>
+          <div class="component">Database Layer</div>
+        </div>
+        <div class="port">Port: 3000</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features -->
+  <section class="section">
+    <h2>Key Features</h2>
+    <div class="features-grid">
+      @for (feature of keyFeatures; track feature.title) {
+        <div class="feature-card">
+          <span class="icon">{{ feature.icon }}</span>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="section">
+    <h2>Technology Stack</h2>
+    <div class="stack-grid">
+      <div class="stack-column">
+        <h3>Frontend</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Technology</th>
+              <th>Version</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (tech of frontendStack; track tech.name) {
+              <tr>
+                <td>
+                  <strong>{{ tech.name }}</strong>
+                </td>
+                <td>
+                  <code>{{ tech.version }}</code>
+                </td>
+                <td>{{ tech.description }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="stack-column">
+        <h3>Backend</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Technology</th>
+              <th>Version</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (tech of backendStack; track tech.name) {
+              <tr>
+                <td>
+                  <strong>{{ tech.name }}</strong>
+                </td>
+                <td>
+                  <code>{{ tech.version }}</code>
+                </td>
+                <td>{{ tech.description }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Render Modes -->
+  <section class="section">
+    <h2>Render Modes</h2>
+    <div class="render-modes">
+      @for (mode of renderModes; track mode.mode) {
+        <div class="mode-card">
+          <h3>{{ mode.mode }}</h3>
+          <p class="description">{{ mode.description }}</p>
+          <p class="use-cases"><strong>Used for:</strong> {{ mode.useCases }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- File Structure -->
+  <section class="section">
+    <h2>SSR File Structure</h2>
+    <div class="file-structure">
+      @for (file of fileStructure; track file.file) {
+        <div class="file-item">
+          <code>{{ file.file }}</code>
+          <span>{{ file.description }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Code Examples -->
+  <section class="section">
+    <h2>Key Code Snippets</h2>
+
+    <div class="code-block">
+      <h3>server.ts - Express SSR Server</h3>
+      <pre><code>import &#123; AngularNodeAppEngine, createNodeRequestHandler &#125; from '&#64;angular/ssr/node';
+import express from 'express';
+
+const app = express();
+const angularApp = new AngularNodeAppEngine();
+
+// Serve static files
+app.use(express.static(browserDistFolder));
+
+// Handle all requests with Angular SSR
+app.use((req, res, next) =&gt; &#123;
+  angularApp.handle(req).then(response =&gt; 
+    response ? writeResponseToNodeResponse(response, res) : next()
+  );
+&#125;);</code></pre>
+    </div>
+
+    <div class="code-block">
+      <h3>app.config.ts - Client Hydration</h3>
+      <pre><code>import &#123; provideClientHydration, withEventReplay &#125; from '&#64;angular/platform-browser';
+
+export const appConfig: ApplicationConfig = &#123;
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(withFetch()),
+    provideClientHydration(withEventReplay()),  // Enable hydration
+  ],
+&#125;;</code></pre>
+    </div>
+
+    <div class="code-block">
+      <h3>app.routes.server.ts - Server Routes with Render Modes</h3>
+      <pre><code>import &#123; RenderMode, ServerRoute &#125; from '&#64;angular/ssr';
+
+export const serverRoutes: ServerRoute[] = [
+  &#123; path: '', renderMode: RenderMode.Prerender &#125;,      // SSG
+  &#123; path: 'dashboard', renderMode: RenderMode.Server &#125;, // SSR
+  // &#123; path: 'settings', renderMode: RenderMode.Client &#125; // CSR
+];</code></pre>
+    </div>
+  </section>
+
+  <!-- Data Flow -->
+  <section class="section">
+    <h2>Request Flow</h2>
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Initial Request</h4>
+          <p>Browser requests a page from Express server on port 4000</p>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Server Rendering</h4>
+          <p>AngularNodeAppEngine renders the Angular app to HTML</p>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>HTML Response</h4>
+          <p>Server sends pre-rendered HTML with transfer state</p>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Hydration</h4>
+          <p>Client Angular bootstraps and hydrates the DOM</p>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h4>Interactive</h4>
+          <p>App becomes fully interactive with event replay</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <section class="section summary">
+    <h2>Summary</h2>
+    <div class="summary-content">
+      <p>
+        This application demonstrates modern Angular SSR using the
+        <code>&#64;angular/ssr</code> package (Angular 17+), which is the successor to Angular
+        Universal. The architecture features:
+      </p>
+      <ul>
+        <li><strong>Hybrid rendering</strong> - Mix of SSG, SSR, and CSR per route</li>
+        <li>
+          <strong>Express integration</strong> - AngularNodeAppEngine handles server rendering
+        </li>
+        <li>
+          <strong>Client hydration</strong> - Seamless server-to-client transition with event replay
+        </li>
+        <li><strong>NestJS backend</strong> - Separate API server for business logic</li>
+        <li>
+          <strong>Standalone components</strong> - Modern Angular architecture without NgModules
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>

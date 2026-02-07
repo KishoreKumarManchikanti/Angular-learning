@@ -1,0 +1,30 @@
+import { Post } from '../post.entity';
+export declare class PostEngagement {
+    id: string;
+    postId: string;
+    post: Post;
+    date: Date;
+    views: number;
+    uniqueViews: number;
+    viewDurationAvgSeconds: number;
+    likes: number;
+    unlikes: number;
+    comments: number;
+    shares: number;
+    saves: number;
+    unsaves: number;
+    pins: number;
+    unpins: number;
+    profileClicks: number;
+    linkClicks: number;
+    mediaClicks: number;
+    feedImpressions: number;
+    searchImpressions: number;
+    profileImpressions: number;
+    reports: number;
+    hides: number;
+    engagementRate: number;
+    hourlyViews: Record<string, number>;
+    createdAt: Date;
+    updatedAt: Date;
+}
